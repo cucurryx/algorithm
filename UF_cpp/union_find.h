@@ -33,7 +33,7 @@ union_find::union_find(int N)
 }
 
 // quick_find
-/*
+
 void union_find::_union(int p, int q)
 {
     if(find(p) != find(q))
@@ -52,7 +52,7 @@ int union_find::find(int p)
 {
     return vec[p];
 }
-*/
+/*
 // quick_union
 void union_find::_union(int p, int q)
 {
@@ -71,7 +71,7 @@ int union_find::find(int p)
 		p = vec[p];
 	return p;
 }
-
+*/
 bool union_find::connected(int p, int q)
 {
     return find(p) == find(q);

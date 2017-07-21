@@ -84,3 +84,12 @@ void weighted_union_find::_union(int p, int q)
 }
 
 ```
+
+
+```
+/****************测试结果 100w数据 200w连接**************
+ *  quick_find| area: 999950  time: 0.593439s
+ *  quick_union| area: 999950  time: 2.6e-05s
+ *  weighted_quick_union| area: 999950  time: 3.1e-05s
+ *****************************************************/
+```

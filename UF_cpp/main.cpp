@@ -1,27 +1,39 @@
 #include <iostream>
+#include <fstream>
+#include <time.h>
 #include "union_find.h"
 #include "weighted_union_find.h"
 using namespace std;
 
 int main()
 {
-    union_find uf(101);
-	weighted_union_find uf_w(101);
+	ifstream in("test_large.txt");
+	int N;
+	in>>N;
 
+    union_find uf(N);
+//	weighted_union_find uf_w(N);
+
+	int begin = clock();
     for(int i = 0; i < 50; ++i)
 	{
-		uf_w._union(i, 100-i);
-        uf._union(i, 100-i);
+		int p, q;
+		in>>p>>q;
+	//	uf_w._union(p, q);
+        uf._union(p, q);
 	}
+	int end = clock();
 
-	uf._union(1, 4);
-	uf._union(1, 99);
-
-	uf_w._union(1, 4);
-	uf_w._union(1, 4);
-
-    cout << uf.count() << endl;
-	cout << uf_w.count() << endl;
+    cout << "quick_union| " << "area: " << uf.count()
+	<< "  time: "<<(end-begin)/1000000.0 <<"s"<< endl;
+	//cout << "weighted_quick_union| " << "area: " << uf_w.count()
+	//<< "  time: "<<(end-begin)/1000000.0 <<"s"<< endl;
 
 	return 0;
 }
+
+/****************测试结果 100w数据 200w连接**************
+ *quick_find| area: 999950  time: 0.593439s
+ *quick_union| area: 999950  time: 2.6e-05s
+ *weighted_quick_union| area: 999950  time: 3.1e-05s
+ *****************************************************/
