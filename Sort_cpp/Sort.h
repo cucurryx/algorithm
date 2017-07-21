@@ -21,10 +21,19 @@ public:
 	bool isSorted(T *array, int n);
 
 private:
+	void mergeSort(vector<T> &vec, int lo, int hi);
+	void merge(vector<T> &vec, int lo, int mi, int hi);
 	void exch(vector<T> &vec, int i, int j);
-	void exch(T* array, int i, int j);
 	bool less(vector<T> &vec, int i, int j);
+
+	void mergeSort(T* array, int lo, int hi);
+	void merge(T* array, int lo, int mi, int hi);
+	void exch(T* array, int i, int j);
 	bool less(T *array, int i, int j);
+
+private:
+	vector<T> vecCopy;
+	T *arrayCopy;
 };
 
 template <typename T>
@@ -66,7 +75,41 @@ void Sort<T>::insertSort(vector<T> &vec)
 template <typename T>
 void Sort<T>::mergeSort(vector<T> &vec)
 {
+	auto begin = vec.begin();
+	while(begin != vec.end())
+		vecCopy.push_back(*begin++);
+	mergeSort(vec, 0, vec.size()-1);
+}
 
+template <typename T>
+void Sort<T>::mergeSort(vector<T>& vec, int lo, int hi)
+{
+	if(lo < hi)
+	{
+		int mid = lo + (hi- lo)/2;
+		mergeSort(vec, lo, mid);
+		mergeSort(vec, mid+1, hi);
+		merge(vec, lo, mid, hi);
+	}
+}
+
+template <typename T>
+void Sort<T>::merge(vector<T> &vec, int lo, int mid, int hi)
+{
+	int i = lo;
+	int j = mid+1;
+
+	for(int k = lo; k <= hi; ++k)
+		vecCopy[k] = vec[k];
+	for(int k = lo; k <= hi; ++k)
+		if(i > mid)
+			vec[k] = vecCopy[j++];
+		else if(j > hi)
+			vec[k] = vecCopy[i++];
+		else if(less(vecCopy, i, j))
+			vec[k] = vecCopy[i++];
+		else
+			vec[k] = vecCopy[j++];
 }
 
 template <typename T>
@@ -112,13 +155,47 @@ void Sort<T>::shellSort(T *array, int n)
 template <typename T>
 void Sort<T>::insertSort(T *array, int n)
 {
-
+	for(int i = 1; i < n; ++i)
+		for(int j = i; j > 0 && less(array, j, j-1); --j)
+			exch(array, i, j);
 }
 
 template <typename T>
 void Sort<T>::mergeSort(T *array, int n)
 {
+	T* arrayCopy = new int[n+1];
+	for(int i = 0; i < n; ++i)
+		arrayCopy[i] = array[i];
+	mergeSort(array, 0, n-1);
+	delete arrayCopy;
+}
 
+template <typename T>
+void Sort<T>::mergeSort(T* array, int lo, int hi)
+{
+	if(lo < hi)
+	{
+		int mid = lo + (hi - lo)/2;
+		mergeSort(array, lo, mid);
+		mergeSort(array, mid+1, hi);
+		merge(array, lo, mid, hi);
+	}
+}
+
+template <typename T>
+void Sort<T>::merge(T* array, int lo, int mid, int hi)
+{
+	int i = lo;
+	int j = mid+1;
+	for(int k = lo; k <= hi; ++k)
+		if(i > mid)
+			array[k] = arrayCopy[j++];
+		else if(j > hi)
+			array[k] = arrayCopy[i++];
+		else if(less(array, i, j))
+			array[k] = arrayCopy[i++];
+		else
+			array[k] = arrayCopy[j++];
 }
 
 template <typename T>
@@ -136,6 +213,7 @@ bool Sort<T>::isSorted(T *array, int n)
 	return true;
 }
 
+//private functions
 template <typename T>
 void Sort<T>::exch(vector<T> &vec, int i, int j)
 {
