@@ -13,27 +13,17 @@ public:
 	void quickSort(vector<T> &vec);
 	bool isSorted(vector<T> &vec);
 
-	void selecteSort(T *array, int n);
-	void shellSort(T *array, int n);
-	void insertSort(T *array, int n);
-	void mergeSort(T *array, int n);
-	void quickSort(T *array, int n);
-	bool isSorted(T *array, int n);
-
 private:
 	void mergeSort(vector<T> &vec, int lo, int hi);
 	void merge(vector<T> &vec, int lo, int mi, int hi);
+	void quickSortThreeWay(vector<T> &vec, int lo, int hi);
+	void quickSort(vector<T> &vec, int lo, int hi);
+	int partition(vector<T>&vec, int lo, int hi);
 	void exch(vector<T> &vec, int i, int j);
 	bool less(vector<T> &vec, int i, int j);
-
-	void mergeSort(T* array, int lo, int hi);
-	void merge(T* array, int lo, int mi, int hi);
-	void exch(T* array, int i, int j);
-	bool less(T *array, int i, int j);
-
+	int compare(vector<T> &vec, int i, int j);
 private:
 	vector<T> vecCopy;
-	T *arrayCopy;
 };
 
 template <typename T>
@@ -89,7 +79,8 @@ void Sort<T>::mergeSort(vector<T>& vec, int lo, int hi)
 		int mid = lo + (hi- lo)/2;
 		mergeSort(vec, lo, mid);
 		mergeSort(vec, mid+1, hi);
-		merge(vec, lo, mid, hi);
+		if(!less(vec, mid, mid+1)) //跳过有序数组的merge
+			merge(vec, lo, mid, hi);
 	}
 }
 
@@ -115,7 +106,61 @@ void Sort<T>::merge(vector<T> &vec, int lo, int mid, int hi)
 template <typename T>
 void Sort<T>::quickSort(vector<T> &vec)
 {
+	//quickSort(vec, 0, vec.size()-1);
+	quickSortThreeWay(vec, 0, vec.size()-1);
+}
 
+template <typename T>
+void Sort<T>::quickSort(vector<T> &vec, int lo, int hi)
+{
+	if(lo >= hi)
+		return;
+	if(lo >= hi - 10)
+	{
+		insertSort(vec);
+		return;
+	}
+	int j = partition(vec, lo, hi);
+	quickSort(vec, lo, j-1);
+	quickSort(vec, j+1, hi);
+}
+
+template <typename T>
+int Sort<T>::partition(vector<T> &vec, int lo, int hi)
+{
+	int i = lo, j = hi+1;
+	T v = vec[lo];
+	while(true)
+	{
+		while(less(vec, ++i, lo))
+			if(i == hi) break;
+		while(less(vec, lo, --j))
+			if(j == lo) break;
+		if(i >= j) 	break;
+		exch(vec, i, j);
+	}
+	exch(vec, lo, j);
+	return j;
+}
+
+/*优化quicksort，对重复元素的处理更快*/
+template <typename T>
+void Sort<T>::quickSortThreeWay(vector<T> &vec, int lo, int hi)
+{
+	if(lo >= hi) return;
+	int lt = lo, i = lo+1, gt = hi;
+	T v = vec[lo];
+	while(i <= gt)
+	{
+		if(vec[i] < v)
+			exch(vec, i++, lt++);
+		else if(vec[i] > v)
+			exch(vec, i, gt--);
+		else
+			i++;
+	}
+	quickSortThreeWay(vec, lo, lt-1);
+	quickSortThreeWay(vec, gt+1, hi);
 }
 
 template <typename T>
@@ -127,91 +172,6 @@ bool Sort<T>::isSorted(vector<T> &vec)
 	return true;
 }
 
-//T*
-template <typename T>
-void Sort<T>::selecteSort(T *array, int n)
-{
-	for(int i = 0; i < n-1; ++i)
-		for(int j = i+1; j < n; ++j)
-			if(less(array, j, i))
-				exch(array, j, i);
-}
-
-template <typename T>
-void Sort<T>::shellSort(T *array, int n)
-{
-	int h = 1;
-	while(h < n/3)
-		h = h*3 + 1;
-	while(h > 0)
-	{
-		for(int i = h; i < n; ++i)
-			for(int j = i; j >= h && less(array, j, j-h); j -= h)
-				exch(array, j, j-h);
-		h /= 3;
-	}
-}
-
-template <typename T>
-void Sort<T>::insertSort(T *array, int n)
-{
-	for(int i = 1; i < n; ++i)
-		for(int j = i; j > 0 && less(array, j, j-1); --j)
-			exch(array, i, j);
-}
-
-template <typename T>
-void Sort<T>::mergeSort(T *array, int n)
-{
-	T* arrayCopy = new int[n+1];
-	for(int i = 0; i < n; ++i)
-		arrayCopy[i] = array[i];
-	mergeSort(array, 0, n-1);
-	delete arrayCopy;
-}
-
-template <typename T>
-void Sort<T>::mergeSort(T* array, int lo, int hi)
-{
-	if(lo < hi)
-	{
-		int mid = lo + (hi - lo)/2;
-		mergeSort(array, lo, mid);
-		mergeSort(array, mid+1, hi);
-		merge(array, lo, mid, hi);
-	}
-}
-
-template <typename T>
-void Sort<T>::merge(T* array, int lo, int mid, int hi)
-{
-	int i = lo;
-	int j = mid+1;
-	for(int k = lo; k <= hi; ++k)
-		if(i > mid)
-			array[k] = arrayCopy[j++];
-		else if(j > hi)
-			array[k] = arrayCopy[i++];
-		else if(less(array, i, j))
-			array[k] = arrayCopy[i++];
-		else
-			array[k] = arrayCopy[j++];
-}
-
-template <typename T>
-void Sort<T>::quickSort(T *array, int n)
-{
-
-}
-
-template <typename T>
-bool Sort<T>::isSorted(T *array, int n)
-{
-	for(int i = 0; i < n-1; ++i)
-		if(less(array, n+1, n))
-			return false;
-	return true;
-}
 
 //private functions
 template <typename T>
@@ -223,21 +183,18 @@ void Sort<T>::exch(vector<T> &vec, int i, int j)
 }
 
 template <typename T>
-void Sort<T>::exch(T* array, int i, int j)
-{
-	T tmp = array[i];
-	array[i] = array[j];
-	array[j] = tmp;
-}
-
-template <typename T>
 bool Sort<T>::less(vector<T> &vec, int i, int j)
 {
 	return vec[i] < vec[j];
 }
 
 template <typename T>
-bool Sort<T>::less(T *array, int i, int j)
+int Sort<T>::compare(vector<T> &vec, int i, int j)
 {
-	return array[i] < array[j];
+	if(vec[i] < vec[j])
+		return -1;
+	else if(vec[i] > vec[j])
+		return 1;
+	else
+		return 0;
 }
