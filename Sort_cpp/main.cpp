@@ -20,6 +20,6 @@ int main()
 	if(sort.isSorted(vec))
 		for(auto x: vec)
 			cout<<x<<endl;
-
+	cout<< rand()%4 <<endl;
 	return 0;
 }
