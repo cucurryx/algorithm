@@ -112,35 +112,33 @@ private:
 		return node;
 	}
 
-	TreeNode<Key, Value> erase(TreeNode<Key, Value>* node, Key key)
+	TreeNode<Key, Value>* erase(TreeNode<Key, Value>* node, Key key)
 	{
 		if(node == NULL)
-			return NULL;
+			return node;
 		if(key < node->key)
-			node = erase(node->left, key);
+			node->left = erase(node->left, key);
 		else if(key > node->key)
-			node = erase(node->right, key);
-		else if(node->left && node->right)
-		{
-			node->key = min(node->right);
-			node = erase(node->right, node->key);
-		}
+			node->right = erase(node->right, key);
 		else
 		{
-			TreeNode<Key, Value>* tmp = node;
-			if(node->left == NULL)
-				node->right = node->right->right;
-			if(node->right == NULL)
-				node->left = node->left->left;
 			--treeSize;
-			delete(tmp);
+			if(node->left == NULL)
+				return node->right;
+			if(node->right == NULL)
+				return node->left;
+			TreeNode<Key, Value>* t = node;
+			node->key = min(node->right);
+			node->value = get(node->key);
+			node->right = deleteMin(t->right);
+			node->left = t->left;
 		}
 		return node;
 	}
 
 	Key min(TreeNode<Key, Value>* h)
 	{
-		TreeNode<Key, Value> node = h;
+		TreeNode<Key, Value>* node = h;
 		while(node->left != NULL)
 			node = node->left;
 		return node->key;
@@ -148,7 +146,7 @@ private:
 
 	Key max(TreeNode<Key, Value>* h)
 	{
-		TreeNode<Key, Value> node = h;
+		TreeNode<Key, Value>* node = h;
 		while(node->right != NULL)
 			node = node->right;
 		return node->key;
