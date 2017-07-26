@@ -11,6 +11,7 @@ public:
 	void insertSort(vector<T> &vec);
 	void mergeSort(vector<T> &vec);
 	void quickSort(vector<T> &vec);
+	void heapSort(vector<T> &vec);
 	bool isSorted(vector<T> &vec);
 
 private:
@@ -18,10 +19,12 @@ private:
 	void merge(vector<T> &vec, int lo, int mi, int hi);
 	void quickSortThreeWay(vector<T> &vec, int lo, int hi);
 	void quickSort(vector<T> &vec, int lo, int hi);
-	int partition(vector<T>&vec, int lo, int hi);
+	int partition(vector<T> &vec, int lo, int hi);
 	void exch(vector<T> &vec, int i, int j);
 	bool less(vector<T> &vec, int i, int j);
 	int compare(vector<T> &vec, int i, int j);
+	void sink(vector<T> &vec, int i, int n);
+	void swim(vector<T> &vec, int i);
 private:
 	vector<T> vecCopy;
 };
@@ -164,6 +167,19 @@ void Sort<T>::quickSortThreeWay(vector<T> &vec, int lo, int hi)
 }
 
 template <typename T>
+void Sort<T>::heapSort(vector<T> &vec)
+{
+	int n = vec.size();
+	for(int i = n/2; i >= 0; --i)
+		sink(vec, i, n);
+	for(int i = n-1; i > 0; --i)
+	{
+		exch(vec, 0, i);
+		sink(vec, 0, i-1);
+	}
+}
+
+template <typename T>
 bool Sort<T>::isSorted(vector<T> &vec)
 {
 	for(int i = 0; i < vec.size()-1; ++i)
@@ -197,4 +213,29 @@ int Sort<T>::compare(vector<T> &vec, int i, int j)
 		return 1;
 	else
 		return 0;
+}
+
+template <typename T>
+void Sort<T>::sink(vector<T> &vec, int i, int n)
+{
+	while(2*i < n)
+	{
+		int child = 2*i + 1;
+		if(child+1 < n && less(vec, child, child+1))
+			++child;
+		if(!less(vec, i, child))
+			break;
+		exch(vec, child, i);
+		i = child;
+	}
+}
+
+template <typename T>
+void Sort<T>::swim(vector<T> &vec, int i)
+{
+	while(less(vec, i/2, i) && i > 0)
+	{
+		exch(vec, i, i/2);
+		i /= 2;
+	}
 }

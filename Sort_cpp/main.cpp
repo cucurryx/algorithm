@@ -15,11 +15,11 @@ int main()
 	//sort.insertSort(vec);
 	//sort.selecteSort(vec);
 	//sort.mergeSort(vec)；
-	sort.quickSort(vec);
+	//sort.quickSort(vec);
+	sort.heapSort(vec);
 
 	if(sort.isSorted(vec))
 		for(auto x: vec)
 			cout<<x<<endl;
-	cout<< rand()%4 <<endl;
 	return 0;
 }
