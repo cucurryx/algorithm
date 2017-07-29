@@ -33,7 +33,7 @@ private:
 class SymbolGraph
 {
 public:
-	SymbolGraph(ifstream& stream)
+	SymbolGraph(ifstream& stream, string dot)
 	{
 		string strOne, strTwo;
 		vector<pair<string, string>> pairs;
