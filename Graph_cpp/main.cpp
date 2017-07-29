@@ -3,17 +3,26 @@
 int main()
 {
     Graph gra(10);
-    for(int i = 0; i < 9; ++i)
-        gra.addEdge(i, i+1);
-    gra.addEdge(1, 9);
-    gra.addEdge(9, 1);
+    gra.addEdge(2, 4);
+    gra.addEdge(0, 3);
+    gra.addEdge(0, 7);
+    gra.addEdge(2, 7);
 
-    cout << gra.V() << endl;
-    cout << gra.E() << endl;
-
-    vector<int> a = gra.allAdj(1);
-    for(auto x: a)
-        cout << x << endl;
+    DepthFirstPaths search(gra, 0);
+    for(int v = 0; v < gra.V(); ++v)
+    {
+        cout << 0 << " to " << v << ": ";
+        if(search.hasPathTo(v) == true)
+        {
+            vector<int> path = search.pathTo(v);
+            for (int i = 0; i < path.size(); ++i)
+                if (path[i] == 0)
+                    cout << path[i];
+                else
+                    cout << "-" << path[i];
+        }
+        cout << endl;
+    }
 
     return 0;
 }
