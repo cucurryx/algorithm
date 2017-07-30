@@ -49,12 +49,38 @@ int main()
 			continue;
 		}
 
-		for(auto x: pathsBFS[i])
+		for(auto x:  pathsBFS[i])
 			if(x == 4)
 				cout << x;
 			else
 				cout << " - " << x;
 		cout << endl;
 	}
+
+	// Test of DirectedCycle
+	//(judge cycle in a directed graph)
+	 DirectedCycle DC(G);
+	 cout << DC.hasCycle() << endl;
+	 vector<int> cycle = DC.getCycle();
+	 for(auto x: cycle)
+	 	cout << x << "-";
+	cout << '\b' << " " << endl;
+
+	//Test of Topological
+	Topological topo(G);
+	cout << topo.isDAG() << endl;
+
+	//Test of strongly connected
+	SCC strongCC(G);
+	vector<vector<int>> allComponent = strongCC.components();
+	cout << "This graph have " << strongCC.count() << " components:" << endl;
+	for(int i = 0; i < allComponent.size(); ++i)
+	{
+		cout << "component" << i << ": ";
+		for(auto x: allComponent[i])
+			cout << x << " ";
+		cout << endl;
+	}
+
 	return 0;
 }
