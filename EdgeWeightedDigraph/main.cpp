@@ -17,10 +17,23 @@ int main()
 	for(int i = 0; i < G.V(); ++i)
 	{
 		cout << 0 << " to " << i;
-		cout << " (" << DPS.getDistTo(i) << "):";
+		printf("(%4.2f) ", DPS.getDistTo(i));
 
 		vector<DirectedEdge> edges = DPS.pathTo(i);
 		for(DirectedEdge e: edges)
+			printf(" %d->%d %.2lf ", e.from(), e.to(), e.weight());
+		cout << endl;
+	}
+
+
+	AcyclicSP AS(G, 0);
+	for(int i = 0; i < G.V(); ++i)
+	{
+		cout << 0 << " to " << i;
+		printf("(%4.2f) ", AS.getDistTo(i));
+
+		vector<DirectedEdge> edgesTwo = AS.pathTo(i);
+		for(DirectedEdge e: edgesTwo)
 			printf(" %d->%d %.2lf ", e.from(), e.to(), e.weight());
 		cout << endl;
 	}
