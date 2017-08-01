@@ -1,0 +1,11 @@
+are you ok?
+I am good
+void collect(Node* x, string pre, vector<int>& vec)
+{
+	if(x == NULL)
+		return;
+	else if(x->val != null)
+		vec.push_back(pre);
+	for(int c = 0; c < R; ++c)
+		collect(x->next[c], pre + c, vec);
+}
