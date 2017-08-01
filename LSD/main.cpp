@@ -9,6 +9,7 @@ int main()
 		strVec.push_back(str);
 
 	LSD lsd;
+
 	lsd.sort(strVec, 3);
 
 	for(auto x: strVec)

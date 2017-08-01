@@ -5,26 +5,27 @@
 #include <algorithm>
 using namespace std;
 
+//低位优先的字符串排序
 class LSD
 {
 public:
-	void sort(vector<string> &a, int W) //通过前W个字符进行排序
+	void sort(vector<string> &vec, int W)
 	{
-		int N = a.size();
+		int N = vec.size();
 		int R = 256;
-		vector<string> aux = vector<string>(N, "");
 
 		for(int d = W-1; d >= 0; --d)
 		{
 			vector<int> count(R+1, 0);
+			vector<string> aux(N, "");
 			for(int i = 0; i < N; ++i)
-				count[a[i][d]+1]++;
-			for(int r = 0; r < R; ++r)
-				count[r+1] += count[r];
+				count[vec[i][d]+1]++;
+			for(int d = 0; d < R; ++d)
+				count[d+1] += count[d];
 			for(int i = 0; i < N; ++i)
-				aux[count[a[i][d]]++] = a[i];
+				aux[count[vec[i][d]]++] = vec[i];
 			for(int i = 0; i < N; ++i)
-				a[i] = aux[i];
+				vec[i] = aux[i];
 		}
 	}
 };
