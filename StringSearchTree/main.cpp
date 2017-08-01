@@ -23,5 +23,11 @@ int main()
 	cout << "Test of longestPrefixOf:" << endl;
 	cout << strTree.longestPrefixOf("youArePig") << endl;
 
+	for(auto x: strTree.keysThatMatch("."))
+		strTree.deleteKey(x);
+
+	cout << "After delete 1 length words:" << endl;
+	for(auto x: strTree.keys())
+		cout << x << endl;
 	return 0;
 }
