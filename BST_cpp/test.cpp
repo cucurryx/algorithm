@@ -8,9 +8,9 @@ int main()
 	{
 		tree.insert(i);
 		tree.insert(-i);
-		tree.erase(i);
-
+		tree.erase(i-10);
 	}
+	tree.midOrder();
 
 	cout << tree.size() << endl;
 

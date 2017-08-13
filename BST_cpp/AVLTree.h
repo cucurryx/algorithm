@@ -21,13 +21,16 @@ class AVLTree
 {
 public:
 	AVLTree(): root(nullptr){}
-	
+
 	void insert(valueType val);
 	void erase(valueType val);
 	int size();
 	bool empty();
 	bool find(valueType val);
 	valueType min();
+
+	void preOrder();
+	void midOrder();
 
 private:
 	TreeNode* insert(valueType val, TreeNode* node);
@@ -36,6 +39,9 @@ private:
 	int size(TreeNode* node);
 	valueType min(TreeNode* node);
 
+	void preOrder(TreeNode* node);
+	void midOrder(TreeNode* node);
+	
 private:
 	TreeNode* root;
 };
@@ -101,11 +107,15 @@ TreeNode* AVLTree::erase(valueType val, TreeNode* node)
 			node = node->left;
 			delete pnode;
 		}
-		else
+		else if(node->right != nullptr)
 		{
 			TreeNode* pnode = node;
 			node = node->right;
 			delete pnode;
+		}
+		else
+		{
+			node = nullptr;
 		}
 	}
 }
@@ -134,4 +144,32 @@ valueType AVLTree::min(TreeNode* node)
 	while(node->left != nullptr)
 		node = node->left;
 	return node->val;
+}
+
+void AVLTree::preOrder()
+{
+	preOrder(root);
+}
+
+void AVLTree::midOrder()
+{
+	midOrder(root);
+}
+
+void AVLTree::preOrder(TreeNode* node)
+{
+	if(node == nullptr)
+		return;
+	cout << node->val << " ";
+	preOrder(node->left);
+	preOrder(node->right);
+}
+
+void AVLTree::midOrder(TreeNode* node)
+{
+	if(node == nullptr)
+		return;
+	midOrder(node->left);
+	cout << node->val << " ";
+	midOrder(node->right);
 }
